@@ -31,15 +31,41 @@
     return /^[\x20-\x7F]*$/.test(str);
   }
 
+  function bin2ascii(text) {
+    var output = "";
+    for (var i = 0 ; i < text.length; i += 8) {
+      var c = 0;
+      for (var j = 0; j < 8 ; j++) { 
+        c <<= 1;
+        c |= parseInt(text[i + j]);
+      }
+      output += String.fromCharCode(c);
+    }
+    return output;
+  }
+
+  function hex2ascii(text) {
+    var output = "";
+    for (var i = 0; (i < text.length && text.substr(i, 2) !== '00'); i += 2)
+      output += String.fromCharCode(parseInt(text.substr(i, 2), 16));
+    return output;
+  }
+
   var input = document.getElementById("input");
   var encodes = [{
     "name" : "base64",
     "regex" : /^([a-zA-Z0-9+\/]*={0,3})?$/,
     "funcname" : "atob"
+  }, { 
+    "name" : "binary",
+    "regex" : /^([0-1]*)?$/,
+    "funcname" : "bin2ascii"
+  }, {
+    "name" : "hex",
+    "regex" : /^([0-9a-f]*)?$/,
+    "funcname" : "hex2ascii"
   }];
-  //fuzzy
-  //"regex" : /^(?:[a-zA-Z0-9+\/]{4})*(?:|(?:[a-zA-Z0-9+\/]{3}=)|(?:[a-zA-Z0-9+\/]{2}==)|(?:[a-zA-Z0-9+\/]{1}===))$/
-
+  
   function show(card_header = "", card_title = "", card_text = "", message = "") {
     html = '<br><div class="card"><div class="card-header">' + card_header + '</div>';
     html += '<div class="card-body"><h5 class="card-title">' + card_title + '</h5>';
