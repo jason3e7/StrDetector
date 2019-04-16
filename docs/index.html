@@ -28,9 +28,23 @@
 
 <script type="text/javascript">
   var input = document.getElementById("input");
-  
+  var encodes = [{
+    "name" : "base64",
+    "regex" : /[a-zA-Z0-9+\/]*=?/ 
+  }];
+  //fuzzy
+  //"regex" : /^(?:[a-zA-Z0-9+\/]{4})*(?:|(?:[a-zA-Z0-9+\/]{3}=)|(?:[a-zA-Z0-9+\/]{2}==)|(?:[a-zA-Z0-9+\/]{1}===))$/
+
+  function show(card_header, card_title) {
+    html = '<br><div class="card"><div class="card-header">' + card_header + '</div>';
+    html += '<div class="card-body"><h5 class="card-title">' + card_title + '</h5></div>';
+    $("#output").append(html);
+  }
+
   function doDetect() {
-    console.log(input.value);
+    for (i = 0; i < encodes.length; i++) {
+      show(encodes[i]["name"], encodes[i]["regex"].test(input.value));
+    }
   }
 
   document.getElementById("detect").onclick = function() { doDetect() };
