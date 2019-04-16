@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <script src="js/jquery-3.3.1.min.js"></script>
+  <title>String Detector</title>
+</head>
+
+<body>
+<div class="jumbotron">
+  <div class="container">
+    <h1 class="display-3">String Detector</h1>
+  </div>
+</div>
+<div class="container">
+  <div class="input-group">
+    <input type="text" class="form-control" placeholder="unknown text" id="input">
+    <div class="input-group-append">
+      <button class="btn btn-primary" type="button" id="detect">Detect</button>
+    </div>
+  </div>
+  <div id="output">
+  </div>
+</div>
+
+<script type="text/javascript">
+  var input = document.getElementById("input");
+  
+  function doDetect() {
+    console.log(input.value);
+  }
+
+  document.getElementById("detect").onclick = function() { doDetect() };
+
+  input.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+      doDetect();
+      this.blur();
+    }
+  });
+  
+</script>
+
+<script src="js/bootstrap.min.js"></script>
+</body>
+
+</html>
