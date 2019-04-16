@@ -27,6 +27,8 @@
 </div>
 
 <script type="text/javascript">
+  var debug = false;
+
   function isASCII(str) {
     return /^[\x20-\x7F]*$/.test(str);
   }
@@ -71,8 +73,16 @@
     "name" : "base32",
     "regex" : /^([2-7a-z]*=*)?$/i,
   }];
+
+  var hashes = [{
+    "name" : "md5",
+    "regex" : /^[a-f0-9]{32}$/i,
+  }];
   
   function show(card_header = "", card_title = "", card_text = "", message = "") {
+    if (debug === false && card_title === "regex not pass") {
+      return 0;
+    }
     html = '<br><div class="card"><div class="card-header">' + card_header + '</div>';
     html += '<div class="card-body"><h5 class="card-title">' + card_title + '</h5>';
     html += '<p class="card-text bg-warning">' + card_text + '</p>';
@@ -83,7 +93,7 @@
   function doDetect() {
     $("#output").empty();
     if ((input.value.length === 0 || isASCII(input.value) === false)) {
-      show("input not in ascii");
+      show("Warning !", "input not in ascii");
       return 0;
     }
 
@@ -120,6 +130,22 @@
       }
 
       show(name, regexResult, output, message);
+    }
+
+    for (i = 0; i < hashes.length; i++) {
+      var hash = hashes[i];
+      var name = hash.name,
+          regexResult = "";
+      
+      if (hash.regex.test(input.value)) {
+        show(name, "regex pass");
+      } else {
+        show(name, "regex not pass");
+      }
+    }
+
+    if ($("#output").text().trim() == "") {
+      show("Warning !", "Not Detect Anything!");
     }
   }
 
