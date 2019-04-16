@@ -58,24 +58,31 @@
     "funcname" : "atob"
   }, { 
     "name" : "binary",
-    "regex" : /^([0-1]*)?$/,
+    "regex" : /^([0-1]*)?$/i,
     "funcname" : "bin2ascii"
   }, {
     "name" : "hex",
-    "regex" : /^([0-9a-f]*)?$/,
+    "regex" : /^([0-9a-f]*)?$/i,
     "funcname" : "hex2ascii"
+  }, {
+    "name" : "base16",
+    "regex" : /^([0-9a-f]*)?$/i,
   }];
   
   function show(card_header = "", card_title = "", card_text = "", message = "") {
     html = '<br><div class="card"><div class="card-header">' + card_header + '</div>';
     html += '<div class="card-body"><h5 class="card-title">' + card_title + '</h5>';
-    html += '<p class="card-text">' + card_text + '</p>';
+    html += '<p class="card-text bg-warning">' + card_text + '</p>';
     html += '<p class="card-text">' + message + '</p></div>';
     $("#output").append(html);
   }
 
   function doDetect() {
     $("#output").empty();
+    if ((input.value.length === 0 || isASCII(input.value) === false)) {
+      show("input not in ascii");
+      return 0;
+    }
 
     for (i = 0; i < encodes.length; i++) {
       var encode = encodes[i];
@@ -90,21 +97,26 @@
       }
       
       regexResult = "regex pass";
-      
+
+      if (encode.funcname === undefined) {
+        show(name, regexResult);
+        continue;
+      }
+
       try {
         output = window[encode.funcname](input.value);
         isAscii = (output.length !== 0 && isASCII(output));
         if (isAscii) {
-          message = "text in ascii";
+          message = "output in ascii";
         } else {
-          message = "text not in ascii";
+          message = "output not in ascii";
         }
       } catch(err) {
         output = err.message;
-        message = "text decode error";
+        message = "decode error";
       }
 
-      show(name, output, message, regexResult);
+      show(name, regexResult, output, message);
     }
   }
 
